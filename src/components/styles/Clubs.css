@@ -1,0 +1,13 @@
+.clubsGrid{
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    grid-template-columns: auto auto auto;
+  }
+  
+  .club{
+    border: 2px solid black;
+    border-radius: 10px;
+    text-align: center;
+    margin: 5px;
+  }
