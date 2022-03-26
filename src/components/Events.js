@@ -1,25 +1,24 @@
 import React from "react";
 import './styles/Events.css';
 
-
 function Events(){
-    return <div class = "events">
+    return <div className = "events">
       
-    <div class = "event">
-        <div class = "eventImage">
+    <div className = "event">
+        <div className = "eventImage">
           {/* <img src = "" alt = "Event"> */}
         </div>
     
-        <div class = "eventDetails">
-          <h4 class = "eventHeading">
+        <div className = "eventDetails">
+          <h4 className = "eventHeading">
               Coding Workshop
           </h4>
     
-          <p class = "eventDescription">
+          <p className = "eventDescription">
               Don't forget to attend
           </p>
       
-          <p class = "dateTime">
+          <p className = "dateTime">
             Coming in : 1Day 12Hrs
           </p>
   
@@ -28,21 +27,21 @@ function Events(){
     
     <hr/>
     
-    <div class = "event">
-        <div class = "eventImage">
+    <div className = "event">
+        <div className = "eventImage">
           {/* <img src = "" alt = "Image"> */}
         </div>
     
-        <div class = "eventDetails">
-          <h4 class = "eventHeading">
+        <div className = "eventDetails">
+          <h4 className = "eventHeading">
               Coding Workshop
           </h4>
     
-          <p class = "eventDescription">
+          <p className = "eventDescription">
               Don't forget to attend
           </p>
       
-          <p class = "dateTime">
+          <p className = "dateTime">
             Coming in : 1Day 12Hrs
           </p>
   
@@ -51,21 +50,21 @@ function Events(){
     
     <hr/>
     
-    <div class = "event">
-        <div class = "eventImage">
+    <div className = "event">
+        <div className = "eventImage">
           {/* <img src = "" alt = "Image"> */}
         </div>
     
-        <div class = "eventDetails">
-          <h4 class = "eventHeading">
+        <div className = "eventDetails">
+          <h4 className = "eventHeading">
               Coding Workshop
           </h4>
     
-          <p class = "eventDescription">
+          <p className = "eventDescription">
               Don't forget to attend
           </p>
       
-          <p class = "dateTime">
+          <p className = "dateTime">
             Coming in : 1Day 12Hrs
           </p>
   

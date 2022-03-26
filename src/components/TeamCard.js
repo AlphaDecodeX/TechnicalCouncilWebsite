@@ -1,17 +1,17 @@
 import React from "react";
-import './styles/Club.css';
+import './styles/TeamCard.css';
 
-const Club=(props)=>{
+const TeamCard = (props)=>{
     return<div className="card">
      <div className='cardsize'>
-     <img className='cardimg'src="https://students.iitgn.ac.in/codingclub/assets/images/metis-265x265.jpg" alt="clublogo"/>
+     <img className='cardimg'src={props.img} alt="memImg"/>
      </div>
      <div className='content'>
        <h1>
-       Metis
+       {props.name}
        </h1>
        <div>
-       Description
+        {props.email}
        </div>
        <br/>
      </div>
@@ -19,4 +19,4 @@ const Club=(props)=>{
    
 }
 
-export default Club;
+export default TeamCard;

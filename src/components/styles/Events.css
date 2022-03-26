@@ -1,7 +1,7 @@
 .events{
     border: solid 2px black;
     border-radius: 7px;
-    min-width: 50%;
+    max-width: 50%;
     margin: auto;
     height: 130px;
     overflow-x: hidden;
