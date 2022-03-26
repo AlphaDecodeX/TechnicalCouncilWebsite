@@ -1,14 +1,15 @@
 {
-  "ID": 1,
   "name": "metis",
   "members": [
     {
+      "ID": 1,
       "name": "metis_1",
       "email": "metis@1",
       "img": "metis_img-1",
       "status": 1
     },
     {
+      "ID": 2,
       "name": "metis_2",
       "email": "metis@2",
       "img": "metis_img-2",
@@ -18,11 +19,13 @@
   "img": "metis_logo",
   "resources": [
     {
+      "ID": 1,
       "name": "metis_res-1",
       "desc": "this is metis res 1",
       "img": "metis_res_img-1"
     },
     {
+      "ID": 2,
       "name": "metis_res-2",
       "desc": "this is metis res 2",
       "img": "metis_res_img-2"
@@ -42,13 +45,6 @@
       "desc": "metis event 2",
       "img": "metis event -img 2",
       "datetime": "event2 data"
-    },
-    {
-      "ID": 3,
-      "name": "metis-event-3",
-      "desc": "metis event 3",
-      "img": "metis event -img 3",
-      "datetime": "event3 data"
     }
   ],
   "projects": [

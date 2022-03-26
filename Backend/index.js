@@ -35,16 +35,18 @@ mongoose
 
 //defining the endpoints
 app.post("/club/postClubData", (req, res) => {
-  const { ID } = req.body;
-  clubData.findOne({ ID: ID }, (err, data) => {
+  const { name } = req.body;
+  clubData.findOne({ name: name }, (err, data) => {
     if (data) {
-      console.log("data found");
+      res.status(200).send("club already exists");
     } else {
+      console.log("club not found, creating club initiated");
+
       clubData.create(req.body, (err, data) => {
         if (err) {
           console.log(err);
         } else {
-          console.log("data is stored succesfully", data);
+          res.status(200).send("data is stored succesfully");
         }
       });
     }
@@ -54,22 +56,26 @@ app.post("/club/postClubData", (req, res) => {
 // delete the club data by passing ID
 
 app.post("/club/deleteClub", (req, res) => {
-  const { ID } = req.body;
-  console.log(ID);
-  clubData.deleteOne({ ID: ID }, (err, data) => {
+  const { name } = req.body;
+
+  clubData.deleteOne({ name: name }, (err, data) => {
     if (err) {
-      console.log("error in deleting the document");
+      res.status(200).send("error in deleting the document");
     } else {
-      console.log("document is deleted successfully");
+      if (data.deletedCount == 0) {
+        res.send({ message: "no similar document found to delete" });
+      } else {
+        res.status(200).send({ message: "document is deleted successfully" });
+      }
     }
   });
 });
 
 //updating the club data
 app.post("/club/updateClub", (req, res) => {
-  const { club_ID, section_ID } = req.body;
+  const { club_ID, section_name } = req.body;
 
-  if (section_ID == "name") {
+  if (section_name == "name") {
     const { updated_name } = req.body;
     clubData.findOneAndUpdate(
       { ID: club_ID },
@@ -84,7 +90,7 @@ app.post("/club/updateClub", (req, res) => {
     );
   }
 
-  if (section_ID == "img") {
+  if (section_name == "img") {
     const { updated_imgURL } = req.body;
     clubData.findOneAndUpdate(
       { ID: ID },
@@ -98,131 +104,243 @@ app.post("/club/updateClub", (req, res) => {
       }
     );
   }
-  if (section_ID == "projects") {
-    const { project_ID } = req.body;
+});
+// handling the club event
+app.post("/club/updateEvents", (req, res) => {
+  const { club_name, data, operation } = req.body;
+  if (operation == "upload") {
+    console.log("uploading in event initiated");
+    clubData.findOne({ name: club_name }, (err, value) => {
+      if (value) {
+        console.log("club is found");
+        const tempValue = value.events.find((event) => event.ID === data.ID);
+
+        if (!tempValue) {
+          clubData.findOneAndUpdate(
+            { name: club_name },
+            {
+              $push: {
+                events: data,
+              },
+            },
+            (err, value) => {}
+          );
+          res.send("uploading is succesfully");
+        } else {
+          res.send("uploade data already exists");
+        }
+      }
+    });
   } else {
+    console.log("deleting");
+    clubData.findOne({ name: club_name }, (err, value) => {
+      if (value) {
+        const tempValue = value.events.find((event) => event.ID === data.ID);
+        console.log("tempValue is ", tempValue);
+        if (tempValue) {
+          clubData.findOneAndUpdate(
+            { name: club_name },
+            {
+              $pull: {
+                events: tempValue,
+              },
+            },
+            (err, value) => {}
+          );
+          res.send("deleted sucessfully");
+        } else {
+          res.send("value does not exist to delete");
+        }
+      }
+    });
   }
 });
 
-app.post("/club/uploadDataToEvent", (req, res) => {
-  const { club_ID, uploadeData } = req.body;
-  console.log(club_ID, uploadeData);
-  clubData.findOne({ ID: club_ID }, (err, value) => {
-    if (value) {
-      console.log("dfsdf", value.events);
-      const tempValue = value.events.find(
-        (event) => event.ID === uploadeData.ID
-      );
-
-      if (!tempValue) {
-        clubData.findOneAndUpdate(
-          { ID: club_ID },
-          {
-            $push: {
-              events: uploadeData,
-            },
-          },
-          (err, value) => {
-            if (value) console.log(value);
-          }
-        );
-        console.log("uploaded is succesfully");
-      } else {
-        console.log("uploade data already exists");
-      }
-    }
-  });
-});
-
 // uploading data to resources
-app.post("/club/uploadDataToResources", (req, res) => {
-  const { club_ID, uploadeData } = req.body;
-  clubData.findOne({ ID: club_ID }, (err, value) => {
-    if (value) {
-      const tempValue = value.resources.find(
-        (resource) => resource.ID === uploadeData.ID
-      );
-
-      if (!tempValue) {
-        clubData.findOneAndUpdate(
-          { ID: club_ID },
-          {
-            $push: {
-              resources: uploadeData,
-            },
-          },
-          (err, value) => {
-            if (value) console.log(value);
-          }
+app.post("/club/updateResources", (req, res) => {
+  const { club_name, data, operation } = req.body;
+  if (operation == "upload") {
+    console.log("uploading in Resource initiated");
+    clubData.findOne({ name: club_name }, (err, value) => {
+      if (value) {
+        console.log("club is found");
+        const tempValue = value.resources.find(
+          (resource) => resource.ID === data.ID
         );
-        console.log("uploaded is succesfully");
-      } else {
-        console.log("uploade data already exists");
+
+        if (!tempValue) {
+          clubData.findOneAndUpdate(
+            { name: club_name },
+            {
+              $push: {
+                resources: data,
+              },
+            },
+            (err, value) => {}
+          );
+          res.send("uploading is succesfully");
+        } else {
+          res.send("uploade data already exists");
+        }
       }
-    }
-  });
+    });
+  } else {
+    console.log("deleting");
+    clubData.findOne({ name: club_name }, (err, value) => {
+      if (value) {
+        const tempValue = value.resources.find(
+          (resource) => resource.ID === data.ID
+        );
+        console.log("tempValue is ", tempValue);
+        if (tempValue) {
+          clubData.findOneAndUpdate(
+            { name: club_name },
+            {
+              $pull: {
+                resources: tempValue,
+              },
+            },
+            (err, value) => {}
+          );
+          res.send("deleted sucessfully");
+        } else {
+          res.send("value does not exist to delete");
+        }
+      }
+    });
+  }
 });
 
 //uploading data to members
 
-app.post("/club/uploadDataToMembers", (req, res) => {
-  const { club_ID, uploadeData } = req.body;
-  clubData.findOne({ ID: club_ID }, (err, value) => {
-    if (value) {
-      const tempValue = value.members.find(
-        (member) => member.ID === uploadeData.ID
-      );
+app.post("/club/updateMembers", (req, res) => {
+  const { club_name, data, operation } = req.body;
+  if (operation == "upload") {
+    console.log("uploading in Members initiated");
+    clubData.findOne({ name: club_name }, (err, value) => {
+      if (value) {
+        console.log("club is found");
+        const tempValue = value.members.find((member) => member.ID === data.ID);
 
-      if (!tempValue) {
-        clubData.findOneAndUpdate(
-          { ID: club_ID },
-          {
-            $push: {
-              members: uploadeData,
+        if (!tempValue) {
+          clubData.findOneAndUpdate(
+            { name: club_name },
+            {
+              $push: {
+                members: data,
+              },
             },
-          },
-          (err, value) => {
-            if (value) console.log(value);
-          }
-        );
-        console.log("uploaded is succesfully");
-      } else {
-        console.log("uploade data already exists");
+            (err, value) => {}
+          );
+          res.send("uploading is succesfully");
+        } else {
+          res.send("uploade data already exists");
+        }
       }
-    }
-  });
+    });
+  } else {
+    console.log("deleting");
+    clubData.findOne({ name: club_name }, (err, value) => {
+      if (value) {
+        const tempValue = value.members.find((member) => member.ID === data.ID);
+        console.log("tempValue is ", tempValue);
+        if (tempValue) {
+          clubData.findOneAndUpdate(
+            { name: club_name },
+            {
+              $pull: {
+                members: tempValue,
+              },
+            },
+            (err, value) => {}
+          );
+          res.send("deleted sucessfully");
+        } else {
+          res.send("value does not exist to delete");
+        }
+      }
+    });
+  }
 });
 
 //uploading data to project
 
-app.post("/club/uploadDataToProject", (req, res) => {
-  const { club_ID, uploadeData } = req.body;
-  clubData.findOne({ ID: club_ID }, (err, value) => {
-    if (value) {
-      const tempValue = value.events.find(
-        (project) => project.ID === uploadeData.ID
-      );
-
-      if (!tempValue) {
-        clubData.findOneAndUpdate(
-          { ID: club_ID },
-          {
-            $push: {
-              projects: uploadeData,
-            },
-          },
-          (err, value) => {
-            if (value) console.log(value);
-          }
+app.post("/club/updateProjects", (req, res) => {
+  const { club_name, data, operation } = req.body;
+  if (operation == "upload") {
+    console.log("uploading in Members initiated");
+    clubData.findOne({ name: club_name }, (err, value) => {
+      if (value) {
+        console.log("club is found");
+        const tempValue = value.projects.find(
+          (project) => project.ID === data.ID
         );
-        console.log("uploaded is succesfully");
-      } else {
-        console.log("uploade data already exists");
+
+        if (!tempValue) {
+          clubData.findOneAndUpdate(
+            { name: club_name },
+            {
+              $push: {
+                projects: data,
+              },
+            },
+            (err, value) => {}
+          );
+          res.send("uploading is succesfully");
+        } else {
+          res.send("uploade data already exists");
+        }
       }
-    }
-  });
+    });
+  } else {
+    console.log("deleting");
+    clubData.findOne({ name: club_name }, (err, value) => {
+      if (value) {
+        const tempValue = value.projects.find(
+          (project) => project.ID === data.ID
+        );
+        console.log("tempValue is ", tempValue);
+        if (tempValue) {
+          clubData.findOneAndUpdate(
+            { name: club_name },
+            {
+              $pull: {
+                projects: tempValue,
+              },
+            },
+            (err, value) => {}
+          );
+          res.send("deleted sucessfully");
+        } else {
+          res.send("value does not exist to delete");
+        }
+      }
+    });
+  }
 });
 //
+
+app.post("/club/updateProjectMember", (req, res) => {
+  const { club_name, project_ID, member_ID, valueTobeUpdated, updatedValue } =
+    req.body;
+  clubData.findOneAndUpdate(
+    {
+      name: club_name,
+      projects: { $elemMatch: { ID: project_ID } },
+    },
+    {
+      $set: { "projects.$.ID": valueToUpdate },
+    },
+    (err, data) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(data);
+      }
+    }
+  );
+});
+
 app.listen(PORT, () => {
   console.log(`listening at port ${PORT}`);
 });
