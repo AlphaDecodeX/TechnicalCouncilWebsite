@@ -1,0 +1,42 @@
+  .club{
+    height: 100vh;
+    background-image: url("https://www.goodcore.co.uk/blog/wp-content/uploads/2019/08/coding-vs-programming-2.jpg");
+      background-repeat: no-repeat;
+    background-size: 100% 100%;
+  }
+  
+  .clubHeading{
+    position: absolute;
+    left: 20px;
+    top: 40%;
+    color: white;
+    padding: 5px;
+  }
+  
+  .name{
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
+  }
+  
+  .name:after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    transform: scaleX(0);
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: white;
+    transform-origin: bottom right;
+    transition: transform 0.25s ease-out;
+  }
+  
+  .name:hover:after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
+  }
+  
+  .description{
+    margin-top: 5px;
+  }
