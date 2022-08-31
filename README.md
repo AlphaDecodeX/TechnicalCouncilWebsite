@@ -29,9 +29,10 @@ Vaibhav Khandare dilip.khandare@iitgn.ac.in
 >> A1: Copy here the declaration of each new or changed `struct' or
 >> `struct' member, global or static variable, `typedef', or
 >> enumeration.  Identify the purpose of each in 25 words or less.
-    <waketick> has been defined to store the time after which it should be woken up.
-    <list_insert_ordered> Data Structure used to store thread element in the sleep list according the the <cmp_waketick> comparator.
-    <cmp_waketick> compares the wakeup time and inserts in the list accordingly.
+
+<waketick> has been defined to store the time after which it should be woken up.
+<list_insert_ordered> Data Structure used to store thread element in the sleep list according the the <cmp_waketick> comparator.
+<cmp_waketick> compares the wakeup time and inserts in the list accordingly.
 
 ---- ALGORITHMS ----
 
@@ -85,7 +86,12 @@ Having a sleep_list make sure that we do minimum operations and interrupts disab
 
 >> B1: Copy here the declaration of each new or changed `struct' or
 >> `struct' member, global or static variable, `typedef', or
->> enumeration.  Identify the purpose of each in 25 words or less.
+>> enumeration. Identify the purpose of each in 25 words or less.
+
+- Added to struct thread
+   int <basepriority>; int <priority>; struct list_elem <donorelem>; struct list <pot_donors> (Potential Donors);
+   struct lock *<blocked>; (Which lock is blocking the current thread)
+
 
 >> B2: Explain the data structure used to track priority donation.
 >> Use ASCII art to diagram a nested donation.  (Alternately, submit a
@@ -132,12 +138,12 @@ Having a sleep_list make sure that we do minimum operations and interrupts disab
 timer  recent_cpu    priority   thread
 ticks   A   B   C   A   B   C   to run
 -----  --  --  --  --  --  --   ------
- 0
- 4
- 8
-12
-16
-20
+ 0      0   0  0    63  61  59     A
+ 4	1.  0. 0    62. 61. 59.    A
+ 8.     2.  0. 0    61. 61. 59.    A
+12.     3.  0. 0    60. 61. 59.    B
+16.     3.  1. 0    60. 60. 59.    B
+20.     3.  2. 0    60. 59. 59.    B
 24
 28
 32
